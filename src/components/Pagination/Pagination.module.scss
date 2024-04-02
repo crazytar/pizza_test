@@ -1,0 +1,40 @@
+@import '../../scss/variables';
+
+.Pagination {
+    font-size: 1.5rem;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+
+    :global {
+        .selected {
+            a {
+                background-color: ($orange);
+
+                color: #fff;
+            }
+        }
+    }
+
+    li {
+        display: flex;
+
+        a {
+            border: 1px solid ($orange);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            color: ($orange);
+            text-align: center;
+
+            &:hover {
+                background-color: ($orange);
+
+                color: #fff;
+
+            }
+
+        }
+    }
+}
