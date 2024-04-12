@@ -1,10 +1,13 @@
+import { useContext } from 'react';
 import styles from './SearchBlock.module.scss' //scss modules approach
 // import AppContext from '../../context'
 import { CiSearch } from "react-icons/ci";
 import { CiSquareRemove as RemoveBtn } from "react-icons/ci";
+import { AppContext } from '../../App';
 
-const SearchBlock = ({ searchValue, searchValueUpdate }) => {
+const SearchBlock = () => {
 
+    const { searchValue, searchValueUpdate } = useContext(AppContext);
     return (
 
         <div className={styles.search_block} >

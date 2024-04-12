@@ -5,11 +5,16 @@ import Skeleton from "../components/PizzaBlock/skeleton";
 import Sort from '../components/Sort';
 import Categories from '../components/Categories';
 import Pagination from '../components/Pagination';
+import { useContext } from 'react';
+
+import { AppContext } from "../App";
 const Home = () => {
     const [productsArr, productsArrUpdate] = React.useState([]);
     const [isLoading, isLoadingSet] = React.useState(true);
-    const [categotyId, categotyIdSet] = React.useState(1);
-    const [currentPage, setcurrentPage] = React.useState(1);
+    const [categotyId, categotyIdSet] = React.useState(0);
+    const [currentPage, setcurrentPage] = React.useState(1); //pagination
+    const { searchValue, searchValueUpdate } = useContext(AppContext);
+    console.log('Home ', searchValue);
     React.useEffect(() => {
         isLoadingSet(true);
         //const categoty = categotyId > 0 ? `category=${categotyId}` : ``;
@@ -42,8 +47,11 @@ const Home = () => {
         <h2 className="content__title">Все пиццы</h2>
         <div className="content__items">
             {isLoading ?
-                [... new Array(6)].map(obj => <Skeleton />) :
-                productsArr.map(obj => <PizzaBlock key={obj.id} {...obj} />)
+                [... new Array(6)].map(obj => <Skeleton />) : (
+                    productsArr
+                        .filter((item) => item.title.toLowerCase().includes(searchValue.toLowerCase()))
+                        .map(obj => <PizzaBlock key={obj.id} {...obj} />)
+                )
             }
         </div>
         <Pagination onChangePage={number => setcurrentPage(number)} />

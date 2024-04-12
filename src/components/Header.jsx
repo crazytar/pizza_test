@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import SearchBlock from './SearchBlock';
 import { useState } from 'react';
 function Header() {
-    const [searchValue, searchValueUpdate] = useState('');
     return (
         <div className="header">
             <div className="container">
@@ -14,7 +13,7 @@ function Header() {
                         <p>самая вкусная пицца во вселенной</p>
                     </div>
                 </Link>
-                <SearchBlock searchValue={searchValue} searchValueUpdate={searchValueUpdate} />
+                <SearchBlock />
                 <div className="header__cart">
                     <Link to="/cart" className="button button--cart">
                         <span>520 ₽</span>
