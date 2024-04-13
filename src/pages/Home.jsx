@@ -5,6 +5,7 @@ import Skeleton from "../components/PizzaBlock/skeleton";
 import Sort from '../components/Sort';
 import Categories from '../components/Categories';
 import Pagination from '../components/Pagination';
+
 import { useContext } from 'react';
 
 import { AppContext } from "../App";
@@ -14,7 +15,9 @@ const Home = () => {
     const [categotyId, categotyIdSet] = React.useState(0);
     const [currentPage, setcurrentPage] = React.useState(1); //pagination
     const { searchValue, searchValueUpdate } = useContext(AppContext);
-    console.log('Home ', searchValue);
+    const [sortOrder, setSortOrder] = React.useState(0); //0 - ACSC 1 - DESC
+    const [sortType, setSortType] = React.useState(0); //0 - popular, 1 - price, 2 - alphabet
+
     React.useEffect(() => {
         isLoadingSet(true);
         //const categoty = categotyId > 0 ? `category=${categotyId}` : ``;
@@ -42,7 +45,7 @@ const Home = () => {
 
         <div className="content__top">
             <Categories categotyId={categotyId} categotyIdSet={categotyIdSet} />
-            <Sort />
+            <Sort setSortOrder={setSortOrder} setSortType={setSortType} />
         </div>
         <h2 className="content__title">Все пиццы</h2>
         <div className="content__items">
@@ -50,6 +53,21 @@ const Home = () => {
                 [... new Array(6)].map(obj => <Skeleton />) : (
                     productsArr
                         .filter((item) => item.title.toLowerCase().includes(searchValue.toLowerCase()))
+                        .sort((a, b) => {
+                            let res = 0;
+                            if (sortType === 0) {
+                                sortOrder > 0 ? res = (a.rating - b.rating) : res = (b.rating - a.rating);
+                            } else if (sortType === 1) {
+                                sortOrder > 0 ? res = (a.price - b.price) : res = (b.price - a.price);
+                            } else if (sortType === 2) {
+                                sortOrder > 0 ? (a.title > b.title ? res = 1 : res = -1) : (a.title > b.title ? res = -1 : res = 1);
+
+                            }
+                            console.log('SortType, sortOrder, res', sortType, sortOrder, res);
+
+                            return res;
+                        })
+                        //Later, it needs to be done request to beckend for filtering
                         .map(obj => <PizzaBlock key={obj.id} {...obj} />)
                 )
             }
