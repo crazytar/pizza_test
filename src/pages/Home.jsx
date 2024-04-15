@@ -7,14 +7,19 @@ import Categories from '../components/Categories';
 import Pagination from '../components/Pagination';
 
 import { useContext } from 'react';
+import { useSelector, useDispatch } from "react-redux";
+import { setCategory } from "../redux/filterSlice";
 
 import { AppContext } from "../App";
 const Home = () => {
+
     const [productsArr, productsArrUpdate] = React.useState([]);
     const [isLoading, isLoadingSet] = React.useState(true);
-    const [categotyId, categotyIdSet] = React.useState(0);
-    const [currentPage, setcurrentPage] = React.useState(1); //pagination
+    // const [categotyId, categotyIdSet] = React.useState(0); //we Use Redux
+    const categotyId = useSelector((store) => store.filterReducer.categoryId);
+    const dispatch = useDispatch();// we can get it also as store.dispatch importing here our store.js
     const { searchValue, searchValueUpdate } = useContext(AppContext);
+    const [currentPage, setcurrentPage] = React.useState(1); //pagination
     const [sortOrder, setSortOrder] = React.useState(0); //0 - ACSC 1 - DESC
     const [sortType, setSortType] = React.useState(0); //0 - popular, 1 - price, 2 - alphabet
 
@@ -41,16 +46,19 @@ const Home = () => {
     },
         [categotyId, currentPage]
     );
+    const onChangeCategory = (id) => {
+        dispatch(setCategory(id));
+    }
     return (<>
 
         <div className="content__top">
-            <Categories categotyId={categotyId} categotyIdSet={categotyIdSet} />
+            <Categories categotyId={categotyId} categotyIdSet={onChangeCategory} />
             <Sort setSortOrder={setSortOrder} setSortType={setSortType} />
         </div>
         <h2 className="content__title">Все пиццы</h2>
         <div className="content__items">
             {isLoading ?
-                [... new Array(6)].map(obj => <Skeleton />) : (
+                [... new Array(6)].map((obj, index) => <Skeleton key={index} />) : (
                     productsArr
                         .filter((item) => item.title.toLowerCase().includes(searchValue.toLowerCase()))
                         .sort((a, b) => {
@@ -63,11 +71,9 @@ const Home = () => {
                                 sortOrder > 0 ? (a.title > b.title ? res = 1 : res = -1) : (a.title > b.title ? res = -1 : res = 1);
 
                             }
-                            console.log('SortType, sortOrder, res', sortType, sortOrder, res);
-
                             return res;
                         })
-                        //Later, it needs to be done request to beckend for filtering
+                        //Later, it needs to be done request to beckend for filtering and sorting
                         .map(obj => <PizzaBlock key={obj.id} {...obj} />)
                 )
             }
