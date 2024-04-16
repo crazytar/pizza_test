@@ -20,8 +20,10 @@ const Home = () => {
     const dispatch = useDispatch();// we can get it also as store.dispatch importing here our store.js
     const { searchValue, searchValueUpdate } = useContext(AppContext);
     const [currentPage, setcurrentPage] = React.useState(1); //pagination
-    const [sortOrder, setSortOrder] = React.useState(0); //0 - ACSC 1 - DESC
-    const [sortType, setSortType] = React.useState(0); //0 - popular, 1 - price, 2 - alphabet
+    // const [sortOrder, setSortOrder] = React.useState(0); //0 - ACSC 1 - DESC
+    // const [sortType, setSortType] = React.useState(0); //0 - popular, 1 - price, 2 - alphabet
+    const sortType = useSelector((store) => store.filterReducer.sort.sortType);
+    const sortOrder = useSelector((store) => store.filterReducer.sort.sortOrder);
 
     React.useEffect(() => {
         isLoadingSet(true);
@@ -53,7 +55,7 @@ const Home = () => {
 
         <div className="content__top">
             <Categories categotyId={categotyId} categotyIdSet={onChangeCategory} />
-            <Sort setSortOrder={setSortOrder} setSortType={setSortType} />
+            <Sort /* setSortOrder={setSortOrder} setSortType={setSortType} */ />
         </div>
         <h2 className="content__title">Все пиццы</h2>
         <div className="content__items">

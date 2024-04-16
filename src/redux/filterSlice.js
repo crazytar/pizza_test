@@ -13,15 +13,19 @@ export const filterSlice = createSlice({
 
         setCategory(state, action) {
             state.categoryId = action.payload;
-            console.log(action);
         },
-        filterSort: (state, action) => {
-            state.sort.sortType = action.payload
+        setSortType: (state, action) => {
+            console.log('setSortType state action', state, action);
+        },
+        setSortOrder: (state, action) => {
+            // console.log('setSortOrder state action', state, action);
+
+            state.sort.sortOrder = action.payload
         },
     },
 })
 // console.log('filterSlice:', filterSlice);
 // Action creators are generated for each case reducer function
-export const { setCategory, filterSort } = filterSlice.actions
+export const { setCategory, setSortType, setSortOrder } = filterSlice.actions
 
 export default filterSlice.reducer
