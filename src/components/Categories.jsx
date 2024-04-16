@@ -2,11 +2,11 @@ import React from "react";
 
 const CategoriesArr = ['Все', 'Мясные', 'Вегетарианская', 'Гриль', 'Острые', 'Закрытые'];
 
-function Categories({ categotyId, categotyIdSet }) {
+function Categories({ categoryId, categoryIdSet }) {
     //const [selectedCat, selectedCatSet] = React.useState(0);
     const OnClickCat = (index) => {
-        if (categotyId !== index)
-            categotyIdSet(index);
+        if (categoryId !== index)
+            categoryIdSet(index);
 
     }
     return (
@@ -14,7 +14,7 @@ function Categories({ categotyId, categotyIdSet }) {
 
             <ul>
                 {CategoriesArr.map((item, index) => {
-                    return <li key={index} className={categotyId === index ? 'active' : ''} onClick={() => OnClickCat(index)
+                    return <li key={index} className={categoryId === index ? 'active' : ''} onClick={() => OnClickCat(index)
                     }> {item}</li>
                 })}
 

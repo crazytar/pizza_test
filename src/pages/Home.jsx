@@ -15,23 +15,26 @@ const Home = () => {
 
     const [productsArr, productsArrUpdate] = React.useState([]);
     const [isLoading, isLoadingSet] = React.useState(true);
-    // const [categotyId, categotyIdSet] = React.useState(0); //we Use Redux
-    const categotyId = useSelector((store) => store.filterReducer.categoryId);
+    // const [categoryId, categoryIdSet] = React.useState(0); //we Use Redux
     const dispatch = useDispatch();// we can get it also as store.dispatch importing here our store.js
     const { searchValue, searchValueUpdate } = useContext(AppContext);
     const [currentPage, setcurrentPage] = React.useState(1); //pagination
     // const [sortOrder, setSortOrder] = React.useState(0); //0 - ACSC 1 - DESC
     // const [sortType, setSortType] = React.useState(0); //0 - popular, 1 - price, 2 - alphabet
-    const sortType = useSelector((store) => store.filterReducer.sort.sortType);
-    const sortOrder = useSelector((store) => store.filterReducer.sort.sortOrder);
+    //const categoryId = useSelector((store) =>  store.filterReducer.categoryId);
+    //const sortType = useSelector((store) => store.filterReducer.sort.sortType);
+    //const sortOrder = useSelector((store) => store.filterReducer.sort.sortOrder);
+    const { categoryId, sort } = useSelector((store) => store.filterReducer);
+
+    const { sortType, sortOrder } = sort;
 
     React.useEffect(() => {
         isLoadingSet(true);
-        //const categoty = categotyId > 0 ? `category=${categotyId}` : ``;
+        //const categoty = categoryId > 0 ? `category=${categoryId}` : ``;
         const url = new URL('https://65d7103d27d9a3bc1d7a0dda.mockapi.io/pizza_site');
         url.searchParams.append('page', currentPage);
         url.searchParams.append('limit', 4);
-        categotyId && url.searchParams.append('category', categotyId);
+        categoryId && url.searchParams.append('category', categoryId);
         fetch(url, {
             method: 'GET',
             headers: { 'content-type': 'application/json' },
@@ -46,7 +49,7 @@ const Home = () => {
 
         //axios.get('https://65d7103d27d9a3bc1d7a0dda.mockapi.io/pizza_site').then(res => productsInCartUpdate(res.data));
     },
-        [categotyId, currentPage]
+        [categoryId, currentPage]
     );
     const onChangeCategory = (id) => {
         dispatch(setCategory(id));
@@ -54,7 +57,7 @@ const Home = () => {
     return (<>
 
         <div className="content__top">
-            <Categories categotyId={categotyId} categotyIdSet={onChangeCategory} />
+            <Categories categoryId={categoryId} categoryIdSet={onChangeCategory} />
             <Sort /* setSortOrder={setSortOrder} setSortType={setSortType} */ />
         </div>
         <h2 className="content__title">Все пиццы</h2>

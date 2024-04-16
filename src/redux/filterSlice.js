@@ -15,11 +15,12 @@ export const filterSlice = createSlice({
             state.categoryId = action.payload;
         },
         setSortType: (state, action) => {
-            console.log('setSortType state action', state, action);
+            // console.log('setSortType state action', state, action);
+            state.sort.sortType = action.payload
+
         },
         setSortOrder: (state, action) => {
             // console.log('setSortOrder state action', state, action);
-
             state.sort.sortOrder = action.payload
         },
     },
