@@ -1,5 +1,6 @@
 
 import React from "react";
+import axios from "axios";
 import PizzaBlock from '../components/PizzaBlock';
 import Skeleton from "../components/PizzaBlock/skeleton";
 import Sort from '../components/Sort';
@@ -35,19 +36,23 @@ const Home = () => {
         url.searchParams.append('page', currentPage);
         url.searchParams.append('limit', 4);
         categoryId && url.searchParams.append('category', categoryId);
-        fetch(url, {
-            method: 'GET',
-            headers: { 'content-type': 'application/json' },
-        })
-            // fetch(`https://65d7103d27d9a3bc1d7a0dda.mockapi.io/pizza_site?${category}`)
-            .then((response) => response.json())
-            .then((json) => {
-                productsArrUpdate(json);
-                isLoadingSet(false);
-            });
+        // fetch(url, {
+        //     method: 'GET',
+        //     headers: { 'content-type': 'application/json' },
+        // })
+        //     .then((response) => response.json())
+        //     .then((json) => {
+        //         productsArrUpdate(json);
+        //         isLoadingSet(false);
+        //     });
+        axios.get(url).then(res => {
+            productsArrUpdate(res.data);
+            isLoadingSet(false);
+
+        });
+
         window.scrollTo(0, 0);
 
-        //axios.get('https://65d7103d27d9a3bc1d7a0dda.mockapi.io/pizza_site').then(res => productsInCartUpdate(res.data));
     },
         [categoryId, currentPage]
     );
