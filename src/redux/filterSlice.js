@@ -7,7 +7,9 @@ export const filterSlice = createSlice({
         sort: {
             sortType: 0,
             sortOrder: 1,
-        }
+        },
+        currentPage: 1, //pagination
+        searchValue: '',
     },
     reducers: {
 
@@ -23,10 +25,24 @@ export const filterSlice = createSlice({
             // console.log('setSortOrder state action', state, action);
             state.sort.sortOrder = action.payload
         },
+        setCurrentPage: (state, action) => {
+            // console.log('setSortOrder state action', state, action);
+            state.currentPage = action.payload
+        },
+        searchValueUpdate: (state, action) => {
+            // console.log('setSortOrder state action', state, action);
+            state.searchValue = action.payload
+        },
+        setUrlParams: (state, action) => {
+            state.currentPage = Number(action.payload.currentPage);
+            state.categoryId = Number(action.payload.categoryId);
+            console.log(action);
+        },
     },
 })
 // console.log('filterSlice:', filterSlice);
 // Action creators are generated for each case reducer function
-export const { setCategory, setSortType, setSortOrder } = filterSlice.actions
+export const { setCategory, setSortType,
+    setSortOrder, setCurrentPage, setUrlParams, searchValueUpdate } = filterSlice.actions
 
 export default filterSlice.reducer

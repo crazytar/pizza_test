@@ -1,35 +1,36 @@
 
 import React from "react";
 import axios from "axios";
+import qs from 'qs';
+import { useNavigate } from "react-router-dom";
 import PizzaBlock from '../components/PizzaBlock';
 import Skeleton from "../components/PizzaBlock/skeleton";
 import Sort from '../components/Sort';
 import Categories from '../components/Categories';
 import Pagination from '../components/Pagination';
 
-import { useContext } from 'react';
+import { useContext, useRef } from 'react';
 import { useSelector, useDispatch } from "react-redux";
-import { setCategory } from "../redux/filterSlice";
+import { setCategory, setCurrentPage, setUrlParams } from "../redux/filterSlice";
 
 import { AppContext } from "../App";
 const Home = () => {
 
-    const [productsArr, productsArrUpdate] = React.useState([]);
-    const [isLoading, isLoadingSet] = React.useState(true);
-    // const [categoryId, categoryIdSet] = React.useState(0); //we Use Redux
+    const navigate = useNavigate();
     const dispatch = useDispatch();// we can get it also as store.dispatch importing here our store.js
-    const { searchValue, searchValueUpdate } = useContext(AppContext);
-    const [currentPage, setcurrentPage] = React.useState(1); //pagination
-    // const [sortOrder, setSortOrder] = React.useState(0); //0 - ACSC 1 - DESC
-    // const [sortType, setSortType] = React.useState(0); //0 - popular, 1 - price, 2 - alphabet
-    //const categoryId = useSelector((store) =>  store.filterReducer.categoryId);
-    //const sortType = useSelector((store) => store.filterReducer.sort.sortType);
-    //const sortOrder = useSelector((store) => store.filterReducer.sort.sortOrder);
-    const { categoryId, sort } = useSelector((store) => store.filterReducer);
+    const isUrlParams = useRef(false); //is there Url params on start app or no
+    const ismMounted = useRef(false); //first render flag
 
+    const [productsArr, productsArrUpdate] = React.useState([]); //products loading state
+    const [isLoading, isLoadingSet] = React.useState(true); //is loading in progress...show skeleton
+    // const { searchValue, searchValueUpdate } = useContext(AppContext); //we use Redux instead
+
+    const { categoryId, sort, currentPage, searchValue } =
+        useSelector((store) => store.filterReducer); //get states from filterReducer slice 
     const { sortType, sortOrder } = sort;
 
-    React.useEffect(() => {
+    const fetchFromBackend = () => {
+        console.log('fetchFromBackend');
         isLoadingSet(true);
         //const categoty = categoryId > 0 ? `category=${categoryId}` : ``;
         const url = new URL('https://65d7103d27d9a3bc1d7a0dda.mockapi.io/pizza_site');
@@ -50,20 +51,52 @@ const Home = () => {
             isLoadingSet(false);
 
         });
+    }
 
+    React.useEffect(() => { //runs only on first render
+        if (window.location.search) { //we also can use useSearchParams hook of react-router-dom
+            const params = qs.parse(window.location.search.substring(1));//substring = remove '?' sign at beginning
+            // console.log(params);
+            dispatch(setUrlParams(params));
+            isUrlParams.current = true;
+        }
+    }, []);
+
+    React.useEffect(() => {
         window.scrollTo(0, 0);
 
+        if (!isUrlParams.current)
+            fetchFromBackend()
+        isUrlParams.current = false;
+
     },
+        [categoryId, currentPage]
+    );
+    React.useEffect(() => {
+        if (ismMounted.current) {
+            const queryString = qs.stringify({
+                categoryId,
+                currentPage
+
+            });
+            navigate(`?${queryString}`); //put categoryId, currentPage to Url
+        }
+        ismMounted.current = true;
+    }
+        ,
         [categoryId, currentPage]
     );
     const onChangeCategory = (id) => {
         dispatch(setCategory(id));
     }
+    const paginOnChangePage = (number) => {
+        dispatch(setCurrentPage(number));
+    }
     return (<>
 
         <div className="content__top">
             <Categories categoryId={categoryId} categoryIdSet={onChangeCategory} />
-            <Sort /* setSortOrder={setSortOrder} setSortType={setSortType} */ />
+            <Sort />
         </div>
         <h2 className="content__title">Все пиццы</h2>
         <div className="content__items">
@@ -88,7 +121,7 @@ const Home = () => {
                 )
             }
         </div>
-        <Pagination onChangePage={number => setcurrentPage(number)} />
+        <Pagination currentPage={currentPage} onChangePage={number => paginOnChangePage(number)} />
 
 
     </>);
