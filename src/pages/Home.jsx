@@ -28,7 +28,6 @@ const Home = () => {
     const { categoryId, sort, currentPage, searchValue } =
         useSelector((store) => store.filterReducer); //get states from filterReducer slice 
     const { sortType, sortOrder } = sort;
-
     const fetchFromBackend = () => {
         console.log('fetchFromBackend');
         isLoadingSet(true);

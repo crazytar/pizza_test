@@ -120,6 +120,7 @@ body {
     svg,
     path {
       transition: all $duration ease-in-out;
+      color: #b6b6b6;
     }
 
     &:hover {
@@ -215,10 +216,11 @@ body {
 
       .button {
         border-color: darken($color: $gray-line, $amount: 10);
+        color: darken($color: $gray-line, $amount: 10);
       }
 
       svg {
-        transform: rotate(45deg);
+        // transform: rotate(45deg);
 
         path {
           fill: darken($color: $gray-line, $amount: 15);

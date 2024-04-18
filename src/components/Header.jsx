@@ -3,7 +3,9 @@ import { Link } from 'react-router-dom';
 import SearchBlock from './SearchBlock';
 import { BsCart } from "react-icons/bs";
 import { useState } from 'react';
+import { useSelector } from 'react-redux';
 function Header() {
+    const { totalPizzas, totalMoney } = useSelector((state) => state.cart)
     return (
         <div className="header">
             <div className="container">
@@ -17,10 +19,10 @@ function Header() {
                 <SearchBlock />
                 <div className="header__cart">
                     <Link to="/cart" className="button button--cart">
-                        <span>520 ₽</span>
+                        <span>{totalMoney} ₽</span>
                         <div className="button__delimiter"></div>
                         <BsCart />
-                        <span>3</span>
+                        <span>{totalPizzas}</span>
                     </Link>
                 </div>
             </div>
