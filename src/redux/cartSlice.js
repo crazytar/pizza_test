@@ -3,7 +3,13 @@ import { createSlice } from '@reduxjs/toolkit'
 const initialState = {
     totalMoney: 0,
     totalPizzas: 0,
-    items: [],
+    items: [], //array of Items, can be items with similar ID, but different custom fields (type, size)
+    // id,
+    // title,
+    // price,
+    // imageUrl,
+    // type,
+    // size
 }
 
 export const cartSlice = createSlice({
@@ -15,7 +21,7 @@ export const cartSlice = createSlice({
             state.totalMoney += action.payload.price;
             state.totalPizzas++;
             // state.total = state.items.reduce((sum, obj) => sum + obj.price, 0);
-            const similarItem = state.items.find((obj) =>
+            const similarItem = state.items.find((obj) => //if already exist , just inc counter
                 obj.id === action.payload.id && obj.type === action.payload.type && obj.size === action.payload.size)
             if (similarItem) {
                 similarItem.count++;
@@ -28,12 +34,17 @@ export const cartSlice = createSlice({
             }
         },
         remFromCart(state, action) {
-            state.items = state.items.filter((item) => item.id !== action.payload.id)
-            //state.total -= action.payload.price;
+            const index = action.payload;
+            state.totalMoney -= (state.items[index].price * state.items[index].count);
+            state.totalPizzas -= state.items[index].count;
+            state.items.splice(index, 1);//delete element
+            //payload is an index of array items
+            //state.items = state.items.filter((item) => item.id !== action.payload.id)
         },
         clearCart(state) {
             state.items = [];
-            state.total = 0;
+            state.totalMoney = 0;
+            state.totalPizzas = 0;
         },
     }
 })

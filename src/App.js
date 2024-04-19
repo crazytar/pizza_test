@@ -13,6 +13,8 @@ import NotFound from './pages/NotFound';
 import Cart from './pages/Cart';
 
 export const AppContext = React.createContext('');
+export const testoArr = ['тонкое', 'традиционное'];
+
 function App() {
   const [searchValue, searchValueUpdate] = React.useState('');
   return (

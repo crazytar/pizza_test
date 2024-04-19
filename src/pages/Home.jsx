@@ -33,9 +33,11 @@ const Home = () => {
         isLoadingSet(true);
         //const categoty = categoryId > 0 ? `category=${categoryId}` : ``;
         const url = new URL('https://65d7103d27d9a3bc1d7a0dda.mockapi.io/pizza_site');
+        //const url = new URL('http://localhost:3500/pizzas');
         url.searchParams.append('page', currentPage);
         url.searchParams.append('limit', 4);
         categoryId && url.searchParams.append('category', categoryId);
+
         // fetch(url, {
         //     method: 'GET',
         //     headers: { 'content-type': 'application/json' },

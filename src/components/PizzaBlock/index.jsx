@@ -6,6 +6,7 @@ import { GrFormSubtract } from "react-icons/gr";
 import { useDispatch } from "react-redux";
 import { addToCart } from "../../redux/cartSlice";
 import styles from './PizzaBlock.module.scss';
+import { testoArr } from "../../App";
 
 const PizzaBlock = ({ id, title, price, priceDeltaSize, imageUrl, sizes, types }) => {
     const dispatch = useDispatch();
@@ -14,7 +15,6 @@ const PizzaBlock = ({ id, title, price, priceDeltaSize, imageUrl, sizes, types }
     const [activeSize, setactiveSize] = useState(0);//0,1,2
     var pizza_price = useRef(price);
 
-    const testoArr = ['тонкое', 'традиционное'];
     function onClickButtonAdd() {
         setCount(prev => prev + 1);
         const itemToRedux = {
@@ -22,8 +22,8 @@ const PizzaBlock = ({ id, title, price, priceDeltaSize, imageUrl, sizes, types }
             title,
             price: pizza_price.current,
             imageUrl,
-            type: activeType,
-            size: activeSize
+            type: types[activeType],
+            size: sizes[activeSize]
         }
         dispatch(addToCart(itemToRedux));
     }
@@ -52,7 +52,8 @@ const PizzaBlock = ({ id, title, price, priceDeltaSize, imageUrl, sizes, types }
                     {
                         types.map((type, index) => {
                             return (
-                                <li key={index} onClick={() => setactiveType(type)} className={activeType === type ? 'active' : ''}>{testoArr[Number(type)]}</li>)
+                                <li key={index} onClick={() => setactiveType(type)}
+                                    className={activeType === type ? 'active' : ''}>{testoArr[Number(type)]}</li>)
                         })
                     }
                     {/* <li className="active">тонкое</li>
@@ -62,7 +63,8 @@ const PizzaBlock = ({ id, title, price, priceDeltaSize, imageUrl, sizes, types }
                     {
                         sizes.map((size, index) => {
                             return (
-                                <li key={index} onClick={() => onChangeSize(index)} className={activeSize === index ? 'active' : ''}>{size} см.</li>)
+                                <li key={index} onClick={() => onChangeSize(index)}
+                                    className={activeSize === index ? 'active' : ''}>{size} см.</li>)
                         })
                     }
                     {/* <li className="active">26 см.</li>
