@@ -10,7 +10,7 @@ import { IoIosClose } from "react-icons/io";
 import { GrClose } from 'react-icons/gr';
 import { testoArr } from '../App';
 
-import { addToCart, clearCart, remFromCart } from '../redux/cartSlice'
+import { addToCart, clearCart, remFromCart, decrementCount } from '../redux/cartSlice'
 
 const Cart = () => {
     const { totalMoney, totalPizzas, items } = useSelector((store) => store.cart);
@@ -18,6 +18,14 @@ const Cart = () => {
 
     const onClickRemove = (index) => {
         dispatch(remFromCart(index));
+    }
+    function onClickPlus(obj) {
+        dispatch(addToCart(obj));
+    }
+    function onClickMinus(index) {
+        dispatch(decrementCount(index));
+
+
     }
     function onClickClear() {
         dispatch(clearCart());
@@ -51,13 +59,13 @@ const Cart = () => {
                                     <p>{testoArr[obj.type]} тесто, {obj.size} см.</p>
                                 </div>
                                 <div className="cart__item-count">
-                                    <div className="button button--outline button--circle cart__item-count-minus">
+                                    <div onClick={() => onClickMinus(index)} className="button button--outline button--circle cart__item-count-minus">
 
                                         <FiMinus />
 
                                     </div>
                                     <b>{obj.count}</b>
-                                    <div className="button button--outline button--circle cart__item-count-plus">
+                                    <div onClick={() => onClickPlus(obj)} className="button button--outline button--circle cart__item-count-plus">
                                         <FiPlus />
 
                                     </div>
