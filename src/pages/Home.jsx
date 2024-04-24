@@ -12,6 +12,7 @@ import Pagination from '../components/Pagination';
 import { useContext, useRef } from 'react';
 import { useSelector, useDispatch } from "react-redux";
 import { setCategory, setCurrentPage, setUrlParams } from "../redux/filterSlice";
+import { fetchPizzas } from "../redux/pizzasSlice";
 
 import { AppContext } from "../App";
 const Home = () => {
@@ -21,22 +22,25 @@ const Home = () => {
     const isUrlParams = useRef(false); //is there Url params on start app or no
     const ismMounted = useRef(false); //first render flag
 
-    const [productsArr, productsArrUpdate] = React.useState([]); //products loading state
-    const [isLoading, isLoadingSet] = React.useState(true); //is loading in progress...show skeleton
+    //const [productsArr, productsArrUpdate] = React.useState([]); //moved to redux
+    // const [isLoading, isLoadingSet] = React.useState(true); //is loading in progress...show skeleton moved to Redux
     // const { searchValue, searchValueUpdate } = useContext(AppContext); //we use Redux instead
 
     const { categoryId, sort, currentPage, searchValue } =
         useSelector((store) => store.filterReducer); //get states from filterReducer slice 
     const { sortType, sortOrder } = sort;
-    const fetchFromBackend = () => {
+
+    const { productsArr, status } = useSelector((store) => store.pizzas);
+    const fetchFromBackend = async () => {
         console.log('fetchFromBackend');
-        isLoadingSet(true);
+        //isLoadingSet(true);
+
         //const categoty = categoryId > 0 ? `category=${categoryId}` : ``;
-        const url = new URL('https://65d7103d27d9a3bc1d7a0dda.mockapi.io/pizza_site');
-        //const url = new URL('http://localhost:3500/pizzas');
-        url.searchParams.append('page', currentPage);
-        url.searchParams.append('limit', 4);
-        categoryId && url.searchParams.append('category', categoryId);
+        // const url = new URL('https://65d7103d27d9a3bc1d7a0dda.mockapi.io/pizza_site');
+        // //const url = new URL('http://localhost:3500/pizzas');
+        // url.searchParams.append('page', currentPage);
+        // url.searchParams.append('limit', 4);
+        // categoryId && url.searchParams.append('category', categoryId);
 
         // fetch(url, {
         //     method: 'GET',
@@ -47,11 +51,30 @@ const Home = () => {
         //         productsArrUpdate(json);
         //         isLoadingSet(false);
         //     });
-        axios.get(url).then(res => {
-            productsArrUpdate(res.data);
-            isLoadingSet(false);
+        // axios.get(url).then(res => { 
+        //axios.get (or fetch) returns Promis, so we can use .then & .catch (Promis methods)
+        //     productsArrUpdate(res.data);
+        //     isLoadingSet(false);
+        // }).catch((err) => {
+        //     console.log('network error');
+        //     isLoadingSet(false);
 
-        });
+        // })
+        // try { //in redux
+        //     // const /*res*/ { data } = await axios.get(url); //res is not a Promiss yet, but Obj with data field
+        //     // dispatch(setItems(data));
+        //     dispatch(fetchPizzas(
+        //         {
+        //             currentPage, categoryId
+        //         }
+        //     ))
+        // } catch (error) {
+        //     console.log('fetch error: ', error);
+        // } finally { //stop loading in any case error or not
+        //     isLoadingSet(false);
+        // }
+        dispatch(fetchPizzas({ currentPage, categoryId }));
+
     }
 
     React.useEffect(() => { //runs only on first render
@@ -101,24 +124,30 @@ const Home = () => {
         </div>
         <h2 className="content__title">Все пиццы</h2>
         <div className="content__items">
-            {isLoading ?
+            {status === 'pending' ?
                 [... new Array(6)].map((obj, index) => <Skeleton key={index} />) : (
-                    productsArr
-                        .filter((item) => item.title.toLowerCase().includes(searchValue.toLowerCase()))
-                        .sort((a, b) => {
-                            let res = 0;
-                            if (sortType === 0) {
-                                sortOrder > 0 ? res = (a.rating - b.rating) : res = (b.rating - a.rating);
-                            } else if (sortType === 1) {
-                                sortOrder > 0 ? res = (a.price - b.price) : res = (b.price - a.price);
-                            } else if (sortType === 2) {
-                                sortOrder > 0 ? (a.title > b.title ? res = 1 : res = -1) : (a.title > b.title ? res = -1 : res = 1);
+                    status === 'error' ? (
+                        <>
+                            <h2>Ошибка получения пицц с бэкенда</h2>
+                        </>
+                    ) : (
+                        productsArr
+                            .filter((item) => item.title.toLowerCase().includes(searchValue.toLowerCase()))
+                            .sort((a, b) => { //Sort mutate array, but returns new sorted array (we use .map then), move it to backend request
+                                let res = 0;
+                                if (sortType === 0) {
+                                    sortOrder > 0 ? res = (a.rating - b.rating) : res = (b.rating - a.rating);
+                                } else if (sortType === 1) {
+                                    sortOrder > 0 ? res = (a.price - b.price) : res = (b.price - a.price);
+                                } else if (sortType === 2) {
+                                    sortOrder > 0 ? (a.title > b.title ? res = 1 : res = -1) : (a.title > b.title ? res = -1 : res = 1);
 
-                            }
-                            return res;
-                        })
-                        //Later, it needs to be done request to beckend for filtering and sorting
-                        .map(obj => <PizzaBlock key={obj.id} {...obj} />)
+                                }
+                                return res;
+                            })
+                            //Later, it needs to be done request to beckend for filtering and sorting
+                            .map(obj => <PizzaBlock key={obj.id} {...obj} />)
+                    )
                 )
             }
         </div>
