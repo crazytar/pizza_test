@@ -12,6 +12,7 @@
     @media (max-width: 730px) {
       flex-wrap: wrap;
       justify-content: center;
+      flex-direction: column;
       gap: 10px;
     }
 

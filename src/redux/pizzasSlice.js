@@ -4,15 +4,18 @@ import axios from 'axios';
 
 
 export const fetchPizzas = createAsyncThunk(
-    'pizzas/fetchPizzasFromBeckend',
-    async (params) => {
+    'pizzas/fetchPizzasStatus',
+    async (params, thunkApi) => {
         const { categoryId, currentPage } = params;
+        // console.log('thunkApi: ', thunkApi);
         const url = new URL('https://65d7103d27d9a3bc1d7a0dda.mockapi.io/pizza_site');
         //const url = new URL('http://localhost:3500/pizzas');
         url.searchParams.append('page', currentPage);
         url.searchParams.append('limit', 4);
         categoryId && url.searchParams.append('category', categoryId);
         const { data } = await axios.get(url);
+        if (!data.length)
+            return thunkApi.rejectWithValue('Нема ничёго')
         return data
     }
 )
@@ -34,6 +37,8 @@ export const pizzasSlice = createSlice({
     },
     extraReducers: (builder) => {
         // Add reducers for additional action types here, and handle loading state as needed
+
+        // we also can use 'pizzas/fetchPizzasStatus/fulfilled' : (state, action) => { }
         builder.addCase(fetchPizzas.fulfilled, (state, action) => {
             // console.log('fulfilled: ', state)
             state.productsArr = action.payload;
@@ -44,10 +49,10 @@ export const pizzasSlice = createSlice({
             state.status = 'pending';
             state.productsArr = []; //clear arr in case of changing category ect
 
-            // console.log('pending...' )
+            // console.log('pending...')
         });
         builder.addCase(fetchPizzas.rejected, (state, action) => {
-            // console.log('rejected: ', state)
+            // console.log('rejected: ', action.payload)
             state.status = 'error';
             state.productsArr = [];
 

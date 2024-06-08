@@ -20,7 +20,9 @@ function Sort() {
     }
     useEffect(() => { //close popup when click outside sort block, ComponentDidMount function, first render comp
         const handleClickOutside = (event) => {
-            if (!event.composedPath().includes(sortRef.current)) { //if click inside sort block
+            // console.log('event.composedPath ', event.composedPath());
+            // console.log('sortRef ', sortRef);
+            if (!event.composedPath().includes(sortRef.current)) { //if click outside sort block
                 setOpen(false);
             }
         }
@@ -37,7 +39,9 @@ function Sort() {
         <div ref={sortRef} className="sort">
             <div className="sort__label">
                 {/* <FaSort onClick={() => setSortOrder(prev => !prev)} /> */}
-                <FaSort onClick={() => dispatch(setSortOrder(!sort.sortOrder))} />
+                <div className="sort__order">
+                    <FaSort onClick={() => dispatch(setSortOrder(!sort.sortOrder))} />
+                </div>
                 <b>Сортировка по:</b>
                 <span onClick={() => setOpen(prev => !prev)}>{sortList[sort.sortType]}</span>
             </div>

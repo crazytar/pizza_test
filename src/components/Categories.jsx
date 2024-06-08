@@ -5,6 +5,7 @@ const CategoriesArr = ['Все', 'Мясные', 'Вегетарианская',
 function Categories({ categoryId, categoryIdSet }) {
     //const [selectedCat, selectedCatSet] = React.useState(0);
     const OnClickCat = (index) => {
+        console.log('OnClickCat ', index);
         if (categoryId !== index)
             categoryIdSet(index);
 
@@ -15,6 +16,7 @@ function Categories({ categoryId, categoryIdSet }) {
             <ul>
                 {CategoriesArr.map((item, index) => {
                     return <li key={index} className={categoryId === index ? 'active' : ''} onClick={() => OnClickCat(index)
+                        //if we dont use arrow f it will be invoked immediately
                     }> {item}</li>
                 })}
 

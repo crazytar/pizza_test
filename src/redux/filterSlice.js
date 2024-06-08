@@ -36,11 +36,13 @@ export const filterSlice = createSlice({
         setUrlParams: (state, action) => {
             state.currentPage = Number(action.payload.currentPage);
             state.categoryId = Number(action.payload.categoryId);
-            console.log(action);
+            console.log('setUrlParams: ', action);
         },
     },
 })
 // console.log('filterSlice:', filterSlice);
+// console.log('filterSlice.reducer:', filterSlice.reducer);
+
 // Action creators are generated for each case reducer function
 export const { setCategory, setSortType,
     setSortOrder, setCurrentPage, setUrlParams, searchValueUpdate } = filterSlice.actions

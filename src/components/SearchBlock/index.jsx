@@ -43,7 +43,7 @@ const SearchBlock = () => {
         <div className={styles.search_block} >
 
             {!currValue && <CiSearch className={styles.searh_icon} />}
-            <input ref={inputRef} onChange={(event) => { onChangeInput(event) }} value={currValue} type="text" placeholder="               Найти пиццу..." />
+            <input ref={inputRef} onChange={(event) => { onChangeInput(event) }} value={currValue} type="text" placeholder="       Найти пиццу..." />
             {currValue &&
                 <RemoveBtn className={styles.btn_remove_icon} onClick={onClickRemove} />
             }

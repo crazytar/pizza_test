@@ -60,7 +60,12 @@ export const cartSlice = createSlice({
         },
     }
 })
-// console.log('filterSlice:', filterSlice);
+// console.log('cartSlice:', cartSlice);
+
+//we can create selectors here to reduce code in component
+export const selectCartItemById = (id) => (state) => state.cart.items.find((obj) => obj.id === id)
+
+export const selectCart = (state) => state.cart;
 // Action creators are generated for each case reducer function
 export const { addToCart, clearCart, remFromCart, decrementCount } = cartSlice.actions
 

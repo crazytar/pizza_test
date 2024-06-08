@@ -9,11 +9,12 @@ import { CiShoppingCart } from "react-icons/ci";
 import { IoIosClose } from "react-icons/io";
 import { GrClose } from 'react-icons/gr';
 import { testoArr } from '../App';
+import { selectCart } from '../redux/cartSlice'
 
 import { addToCart, clearCart, remFromCart, decrementCount } from '../redux/cartSlice'
 
 const Cart = () => {
-    const { totalMoney, totalPizzas, items } = useSelector((store) => store.cart);
+    const { totalMoney, totalPizzas, items } = useSelector(selectCart);
     const dispatch = useDispatch();
 
     const onClickRemove = (index) => {

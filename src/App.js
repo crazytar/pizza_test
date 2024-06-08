@@ -11,28 +11,30 @@ import Skeleton from './components/PizzaBlock/skeleton';
 import Home from './pages/Home';
 import NotFound from './pages/NotFound';
 import Cart from './pages/Cart';
+import ProductDetails from './pages/ProductDetails';
 
-export const AppContext = React.createContext('');
+// export const AppContext = React.createContext(''); //we use Redux
 export const testoArr = ['тонкое', 'традиционное'];
 
 function App() {
-  const [searchValue, searchValueUpdate] = React.useState('');
+
   return (
     <div className="wrapper">
-      <AppContext.Provider value={{ searchValue, searchValueUpdate }}>
-        <Header />
-        <div className="content">
-          <div className="container">
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/cart" element={<Cart />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
+      {/* <AppContext.Provider value={{ searchValue, searchValueUpdate }}> */}
+      <Header />
+      <div className="content">
+        <div className="container">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/cart" element={<Cart />} />
+            <Route path="/product/:id" element={<ProductDetails />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
 
 
-          </div>
         </div>
-      </AppContext.Provider >
+      </div>
+
 
     </div>
 

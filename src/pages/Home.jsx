@@ -8,6 +8,7 @@ import Skeleton from "../components/PizzaBlock/skeleton";
 import Sort from '../components/Sort';
 import Categories from '../components/Categories';
 import Pagination from '../components/Pagination';
+import { Link, useLocation } from 'react-router-dom';
 
 import { useContext, useRef } from 'react';
 import { useSelector, useDispatch } from "react-redux";
@@ -76,19 +77,16 @@ const Home = () => {
         dispatch(fetchPizzas({ currentPage, categoryId }));
 
     }
-
     React.useEffect(() => { //runs only on first render
         if (window.location.search) { //we also can use useSearchParams hook of react-router-dom
             const params = qs.parse(window.location.search.substring(1));//substring = remove '?' sign at beginning
-            // console.log(params);
-            dispatch(setUrlParams(params));
+            dispatch(setUrlParams(params)); //re render
             isUrlParams.current = true;
         }
     }, []);
 
     React.useEffect(() => {
         window.scrollTo(0, 0);
-
         if (!isUrlParams.current)
             fetchFromBackend()
         isUrlParams.current = false;
@@ -97,14 +95,15 @@ const Home = () => {
         [categoryId, currentPage]
     );
     React.useEffect(() => {
-        if (ismMounted.current) {
-            const queryString = qs.stringify({
-                categoryId,
-                currentPage
 
-            });
-            navigate(`?${queryString}`); //put categoryId, currentPage to Url
-        }
+        //  if (ismMounted.current) { //if not first render 
+        const queryString = qs.stringify({
+            categoryId,
+            currentPage
+
+        });
+        navigate(`?${queryString}`); //put categoryId, currentPage to Url
+        // }
         ismMounted.current = true;
     }
         ,
@@ -146,11 +145,16 @@ const Home = () => {
                                 return res;
                             })
                             //Later, it needs to be done request to beckend for filtering and sorting
-                            .map(obj => <PizzaBlock key={obj.id} {...obj} />)
+                            .map(obj => {
+                                return (
+                                    <Link to={"".concat('/product/', obj.id)} className="products__link" >
+                                        <PizzaBlock key={obj.id} {...obj} />
+                                    </Link>)
+                            })
                     )
                 )
             }
-        </div>
+        </div >
         <Pagination currentPage={currentPage} onChangePage={number => paginOnChangePage(number)} />
 
 

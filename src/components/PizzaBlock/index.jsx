@@ -14,7 +14,7 @@ const PizzaBlock = ({ id, title, price, priceDeltaSize, imageUrl, sizes, types }
     const [activeType, setactiveType] = useState(0);
     const [activeSize, setactiveSize] = useState(0);//0,1,2
     var pizza_price = useRef(price);
-
+    // console.log({ id, title, price, priceDeltaSize, imageUrl, sizes, types });
     function onClickButtonAdd() {
         setCount(prev => prev + 1);
         const itemToRedux = {
@@ -53,7 +53,8 @@ const PizzaBlock = ({ id, title, price, priceDeltaSize, imageUrl, sizes, types }
                         types.map((type, index) => {
                             return (
                                 <li key={index} onClick={() => setactiveType(type)}
-                                    className={activeType === type ? 'active' : ''}>{testoArr[Number(type)]}</li>)
+                                    className={activeType === type ? 'active' : ''}>{testoArr[Number(type)]}</li>
+                            )
                         })
                     }
                     {/* <li className="active">тонкое</li>

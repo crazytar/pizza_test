@@ -1,11 +1,12 @@
 import PizzaLogo from '../assets/img/pizza-logo.svg'
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import SearchBlock from './SearchBlock';
 import { BsCart } from "react-icons/bs";
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 function Header() {
     const { totalPizzas, totalMoney } = useSelector((state) => state.cart)
+    const location = useLocation(); //force rerender all
     return (
         <div className="header">
             <div className="container">
@@ -17,14 +18,17 @@ function Header() {
                     </div>
                 </Link>
                 <SearchBlock />
-                <div className="header__cart">
-                    <Link to="/cart" className="button button--cart">
-                        <span>{totalMoney} ₽</span>
-                        <div className="button__delimiter"></div>
-                        <BsCart />
-                        <span>{totalPizzas}</span>
-                    </Link>
-                </div>
+                {location.pathname !== '/cart' && (
+                    <div className="header__cart">
+                        <Link to="/cart" className="button button--cart">
+                            <span>{totalMoney} ₽</span>
+                            <div className="button__delimiter"></div>
+                            <BsCart />
+                            <span>{totalPizzas}</span>
+                        </Link>
+                    </div>
+                )
+                }
             </div>
         </div>
     )
